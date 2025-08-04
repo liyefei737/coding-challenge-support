@@ -101,7 +101,7 @@ class Difficulty(BaseSchema, DifficultyBase):
 class ChallengeBase(BaseModel):
     """Base schema for challenge data."""
     
-    challenge_id: str = Field(..., min_length=5, max_length=20, regex=r"^CHAL_\d+$")
+    challenge_id: str = Field(..., min_length=5, max_length=20, pattern=r"^CHAL_\d+$")
     title: str = Field(..., min_length=3, max_length=100)
     description: str = Field(..., min_length=10)
     category_id: Optional[int] = None

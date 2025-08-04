@@ -122,3 +122,8 @@ If you encounter issues:
    ```bash
    docker-compose ps postgres
    ```
+
+5. If you encounter import errors when starting the application:
+   - Check the volume mapping in `docker-compose.yml`
+   - Ensure the local app directory is mounted at `/app/app` in the container
+   - The correct volume mapping should be: `./app:/app/app`

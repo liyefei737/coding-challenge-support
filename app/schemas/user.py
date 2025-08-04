@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional, List, Any
 from pydantic import BaseModel, EmailStr, Field, validator
 
 from app.schemas.base import BaseSchema
@@ -49,5 +49,5 @@ class User(BaseSchema, UserBase):
 class UserWithPosts(User):
     """Schema for user response with posts."""
     
-    posts: List["PostBase"] = []  # Forward reference to PostBase
+    posts: List[Any] = []  # Generic list type to avoid circular imports
 

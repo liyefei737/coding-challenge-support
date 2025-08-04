@@ -28,13 +28,9 @@ class Settings(BaseSettings):
             username=values.get("POSTGRES_USER"),
             password=values.get("POSTGRES_PASSWORD"),
             host=values.get("POSTGRES_HOST"),
-            port=values.get("POSTGRES_PORT"),
+            port=int(values.get("POSTGRES_PORT")),
             path=f"/{values.get('POSTGRES_DB') or ''}",
         )
-    
-    
-    # Previously contained JWT settings
-    # These have been removed as the application now assumes all requests are authenticated and authorized
     
     class Config:
         case_sensitive = True

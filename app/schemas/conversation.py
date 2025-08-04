@@ -34,7 +34,7 @@ class Post(BaseSchema, PostBase):
 class ConversationBase(BaseModel):
     """Base schema for conversation data."""
     
-    identifier: Optional[str] = Field(None, min_length=5, max_length=20, regex=r"^CONV_\d+$")
+    identifier: Optional[str] = Field(None, min_length=5, max_length=20, pattern=r"^CONV_\d+$")
     topic: str = Field(..., min_length=3, max_length=200)
     category_id: Optional[int] = None
     challenge_id: Optional[int] = None
