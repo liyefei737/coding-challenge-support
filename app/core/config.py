@@ -29,7 +29,7 @@ class Settings(BaseSettings):
             password=values.get("POSTGRES_PASSWORD"),
             host=values.get("POSTGRES_HOST"),
             port=int(values.get("POSTGRES_PORT")),
-            path=f"/{values.get('POSTGRES_DB') or ''}",
+            path=f"{values.get('POSTGRES_DB') or ''}",
         )
     
     class Config:

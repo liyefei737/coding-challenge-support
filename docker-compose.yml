@@ -17,7 +17,6 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=coding_challenges
       - POSTGRES_HOST=postgres
-      - POSTGRES_PORT=5432
     networks:
       - app-network
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload

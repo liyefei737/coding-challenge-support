@@ -49,5 +49,5 @@ class User(BaseSchema, UserBase):
 class UserWithPosts(User):
     """Schema for user response with posts."""
     
-    posts: List[Any] = []  # Generic list type to avoid circular imports
+    posts: List[Any] = []  # Using Any to avoid circular import issues
 

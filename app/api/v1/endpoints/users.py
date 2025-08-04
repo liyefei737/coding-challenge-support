@@ -122,10 +122,24 @@ def read_user_posts(
     """
     Get a specific user with their posts.
     """
+    # Get the user from the database
     db_user = user.get(db, id=user_id)
     if not db_user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="User not found",
         )
-    return db_user
+    
+    # Explicitly load the posts relationship
+    db.refresh(db_user)
+    
+    # Create a UserWithPosts response
+    return {
+        "id": db_user.id,
+        "username": db_user.username,
+        "email": db_user.email,
+        "is_support": db_user.is_support,
+        "created_at": db_user.created_at,
+        "updated_at": db_user.updated_at,
+        "posts": db_user.posts
+    }
