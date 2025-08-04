@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional, List
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 from app.schemas.base import BaseSchema
 from app.schemas.user import User
@@ -44,10 +44,11 @@ class ConversationCreate(ConversationBase):
     """Schema for creating a conversation."""
     
     category_id: int
-    challenge_id: int
+    challenge_id: str
     initial_post: str = Field(..., min_length=1)
     
-    @validator("topic")
+    @field_validator("topic")
+    @classmethod
     def topic_must_be_descriptive(cls, v):
         if len(v.split()) < 2:
             raise ValueError("Topic must be descriptive (at least 2 words)")

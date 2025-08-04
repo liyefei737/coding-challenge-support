@@ -67,8 +67,8 @@ def create_conversation(
             detail="Challenge not found"
         )
     
-    # Create conversation using fixed user ID
-    return conversation.create(db, obj_in=conversation_in, user_id=FIXED_USER_ID)
+    # Create conversation using fixed user ID and the challenge's id
+    return conversation.create(db, obj_in=conversation_in, user_id=FIXED_USER_ID, challenge_id=db_challenge.id)
 
 @router.get("/{conversation_id}", response_model=Conversation)
 def get_conversation(

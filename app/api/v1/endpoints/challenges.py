@@ -7,9 +7,9 @@ from app.db.session import get_postgres_db
 from app.crud import challenge, user
 from app.schemas import (
     Challenge, ChallengeCreate, ChallengeUpdate, ChallengeFilter,
-    Conversation, Category, Difficulty, Tag
+    Conversation
 )
-from app.models.basic_models import User
+from app.models.basic_models import User, Category, Difficulty, Tag
 
 # Fixed user ID for operations that need a user ID
 FIXED_USER_ID = 1

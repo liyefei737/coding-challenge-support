@@ -19,9 +19,15 @@ class CRUDConversation(CRUDBase[Conversation, ConversationCreate, ConversationUp
         """
         return db.query(Conversation).filter(Conversation.identifier == identifier).first()
 
-    def create(self, db: Session, *, obj_in: ConversationCreate, user_id: int) -> Conversation:
+    def create(self, db: Session, *, obj_in: ConversationCreate, user_id: int, challenge_id: int = None) -> Conversation:
         """
         Create a new conversation with an initial post.
+        
+        Args:
+            db: Database session
+            obj_in: Conversation data
+            user_id: User ID for the initial post
+            challenge_id: Optional integer challenge ID to override the string challenge_id in obj_in
         """
         # Generate a unique identifier
         last_conversation = db.query(Conversation).order_by(Conversation.id.desc()).first()
@@ -35,9 +41,10 @@ class CRUDConversation(CRUDBase[Conversation, ConversationCreate, ConversationUp
         identifier = f"CONV_{new_num:03d}"
         
         # Create the conversation
-        conversation_data = obj_in.model_dump(exclude={"initial_post"})
+        conversation_data = obj_in.model_dump(exclude={"initial_post", "identifier", "challenge_id"})
         db_obj = Conversation(
             identifier=identifier,
+            challenge_id=challenge_id,  # Use the provided integer challenge_id
             **conversation_data
         )
         db.add(db_obj)

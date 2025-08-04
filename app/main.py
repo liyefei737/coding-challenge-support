@@ -1,10 +1,17 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.openapi.utils import get_openapi
+from fastapi.responses import JSONResponse
+import traceback
+import logging
 
 from app.core.config import settings
 from app.api.v1.api import api_router
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Create FastAPI app
 app = FastAPI(
@@ -23,6 +30,25 @@ if settings.BACKEND_CORS_ORIGINS:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+# Exception handler middleware
+@app.middleware("http")
+async def exception_middleware(request: Request, call_next):
+    try:
+        return await call_next(request)
+    except Exception as e:
+        # Log the exception
+        error_detail = f"Exception: {str(e)}\n{traceback.format_exc()}"
+        logger.error(f"Request to {request.url} failed: {error_detail}")
+        
+        # Return a JSON response with error details
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": str(e),
+                "traceback": traceback.format_exc().split("\n")
+            }
+        )
 
 # Include API router
 app.include_router(api_router, prefix=settings.API_V1_STR)

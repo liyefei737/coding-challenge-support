@@ -1,5 +1,5 @@
 from typing import Optional, List, Any
-from pydantic import BaseModel, EmailStr, Field, validator
+from pydantic import BaseModel, EmailStr, Field, field_validator
 
 from app.schemas.base import BaseSchema
 
@@ -21,7 +21,8 @@ class UserCreate(UserBase):
     email: EmailStr
     password: str = Field(..., min_length=8)
     
-    @validator("username")
+    @field_validator("username")
+    @classmethod
     def username_alphanumeric(cls, v):
         if not v.isalnum():
             raise ValueError("Username must be alphanumeric")

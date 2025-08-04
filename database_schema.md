@@ -1,4 +1,5 @@
 # Database Schema Design
+**Last Updated: 2025-08-04**
 
 ## Entity-Relationship Diagram (ERD)
 
@@ -67,9 +68,9 @@
 
 ### Users
 - **id**: Primary key, auto-increment
-- **username**: Unique username for the user
+- **username**: Unique username for the user (must be alphanumeric)
 - **email**: User's email address
-- **password_hash**: Hashed password for security
+- **password_hash**: Password hashed using SHA-256 for security
 - **is_support**: Boolean flag to identify support team members
 - **created_at**: Timestamp when the record was created
 - **updated_at**: Timestamp when the record was last updated
@@ -130,7 +131,7 @@
 - **identifier**: Unique identifier for the conversation (e.g., CONV_001)
 - **topic**: Topic of the conversation
 - **category_id**: Foreign key to Categories table
-- **challenge_id**: Foreign key to Challenges table
+- **challenge_id**: Foreign key to Challenges table (references the id column, not the challenge_id string)
 - **created_at**: Timestamp when the record was created
 - **updated_at**: Timestamp when the record was last updated
 
@@ -187,7 +188,10 @@ This schema is normalized to the Third Normal Form (3NF):
 
 5. **Conversation and Posts Structure**:
    - Conversations are linked to challenges but maintained separately
+   - The challenge_id in Conversations references the id column of Challenges, not the challenge_id string
+   - When creating a conversation via API, the challenge_id string is converted to the corresponding id
    - Posts are linked to conversations in a one-to-many relationship
+   - Each post has a post_id that represents its sequential position in the conversation
    - Preserves the hierarchical nature of the conversation threads
 
 6. **Timestamps for Auditing**:
@@ -199,3 +203,26 @@ This schema is normalized to the Third Normal Form (3NF):
    - Maintains referential integrity
    - Prevents orphaned records
    - Enables efficient joins between related tables
+
+## API and Data Validation
+
+The database schema is exposed through a RESTful API with the following validation rules:
+
+1. **Users**:
+   - Usernames must be alphanumeric
+   - Email addresses must be valid
+   - Passwords must be at least 8 characters long
+
+2. **Challenges**:
+   - challenge_id must follow the pattern "CHAL_XXX"
+   - Points must be a positive integer
+   - Category and difficulty must exist in the database
+
+3. **Conversations**:
+   - Topic must be at least 3 words long
+   - When creating a conversation, the challenge_id is provided as a string (e.g., "CHAL_001")
+   - The API converts this string to the corresponding challenge id before storing
+
+4. **Posts**:
+   - Content cannot be empty
+   - post_id is automatically assigned as the next sequential number in the conversation

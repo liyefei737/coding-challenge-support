@@ -1,5 +1,5 @@
 from typing import Optional, List
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 from app.schemas.base import BaseSchema
 
@@ -118,7 +118,8 @@ class ChallengeCreate(ChallengeBase):
     learning_objectives: List[str] = []
     hints: List[str] = []
     
-    @validator("points")
+    @field_validator("points")
+    @classmethod
     def points_must_be_positive(cls, v):
         if v < 0:
             raise ValueError("Points must be a positive integer")
